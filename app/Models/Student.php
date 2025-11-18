@@ -18,4 +18,14 @@ class Student extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class);
+    }
 }

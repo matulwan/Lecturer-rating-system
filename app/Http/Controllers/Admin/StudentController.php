@@ -19,17 +19,25 @@ class StudentController extends Controller
     public function index()
     {
         try {
-            $students = Student::with('user')->get()->map(function ($student) {
+            \Log::info('StudentController index called');
+            
+            $students = Student::with('user')->get();
+            \Log::info('Students query result:', ['count' => $students->count(), 'data' => $students->toArray()]);
+            
+            $mapped = $students->map(function ($student) {
+                \Log::info('Processing student:', ['student_id' => $student->id, 'user' => $student->user]);
                 return [
                     'id' => $student->id,
                     'name' => $student->user ? $student->user->name : 'N/A',
-                    'ic_number' => $student->user ? $student->user->user_code : 'N/A', // Using user_code as IC number
+                    'ic_number' => $student->user ? $student->user->user_code : 'N/A',
                     'semester' => $student->semester
                 ];
             });
 
-            return response()->json($students);
+            \Log::info('Final mapped result:', $mapped->toArray());
+            return response()->json($mapped);
         } catch (Exception $e) {
+            \Log::error('StudentController error:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to retrieve students',
@@ -57,6 +65,7 @@ class StudentController extends Controller
             $user = User::create([
                 'name' => $validated['name'],
                 'user_code' => $validated['ic_number'], // Use user_code field for IC number
+                'ic_number' => $validated['ic_number'], // Also populate ic_number field
                 'password' => Hash::make($validated['ic_number']), // IC as password
                 'role' => 'student'
             ]);
@@ -81,10 +90,11 @@ class StudentController extends Controller
 
         } catch (Exception $e) {
             DB::rollback();
+            \Log::error('Student creation failed:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create student',
+                'message' => 'Failed to create student: ' . $e->getMessage(),
                 'error' => $e->getMessage()
             ], 500);
         } 

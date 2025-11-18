@@ -58,4 +58,9 @@ class AuthController extends Controller
         
         return redirect()->route('login');
     }
+
+    public function user(Request $request)
+    {
+        return response()->json(Auth::user());
+    }
 }

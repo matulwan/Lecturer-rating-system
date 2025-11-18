@@ -18,28 +18,10 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Super Admin',
             'user_code' => '2302132',
+            'ic_number' => '2302132',
             'password' => Hash::make('2302132'),
             'role' => 'super_admin',
         ]);
-
-        // Create Lecturer
-        User::create([
-            'name' => 'Dr. John Doe',
-            'user_code' => '0122650043',
-            'password' => Hash::make('0122650043'),
-            'role' => 'lecturer',
-        ]);
-
-        // Create Student
-        User::create([
-            'name' => 'Student One',
-            'user_code' => '050221030621',
-            'password' => Hash::make('050221030621'),
-            'role' => 'student',
-        ]);
-    }
-    public function username()
-    {
-        return 'user_code';
+        
     }
 }

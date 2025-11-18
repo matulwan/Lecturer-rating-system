@@ -19,6 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'user_code',
+        'ic_number',
         'password',
         'role',
     ];
@@ -45,6 +46,16 @@ public function lecturer()
 
 
 /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'user_code';
+    }
+
+    /**
      * Get the login username to be used by the controller.
      *
      * @return string
